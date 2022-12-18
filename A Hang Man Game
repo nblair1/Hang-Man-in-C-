@@ -1,0 +1,41 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <random>
+
+const int MAX_WRONG = 8;  // maximum number of incorrect guesses allowed
+
+int main()
+{
+  std::vector<std::string> words {"dog", "cat", "bird", "fish", "horse"};  // list of words to choose from
+
+  std::random_device rd;
+  std::mt19937 rng(rd());
+  std::uniform_int_distribution<int> uni(0, words.size() - 1);  // random number generator to select a word
+
+  std::string word = words[uni(rng)];  // select a random word from the list
+  int wrong = 0;  // number of incorrect guesses
+  std::string so_far(word.size(), '-');  // word with dashes in place of unknown letters
+  std::string used = "";  // letters already guessed
+
+  std::cout << "Welcome to Hangman!\n";
+
+  while ((wrong < MAX_WRONG) && (so_far != word))
+  {
+    std::cout << "\n\nYou have " << (MAX_WRONG - wrong) << " incorrect guesses left.\n";
+    std::cout << "Used letters: " << used << "\n";
+    std::cout << "Word: " << so_far << "\n";
+
+    char guess;
+    std::cout << "Enter your guess: ";
+    std::cin >> guess;
+    guess = std::tolower(guess);  // convert to lowercase
+
+    while (used.find(guess) != std::string::npos)  // check if letter has already been used
+    {
+      std::cout << "You've already guessed " << guess << std::endl;
+      std::cout << "Enter your guess: ";
+      std::cin >> guess;
+      guess = std::tolower(guess);
+    }
